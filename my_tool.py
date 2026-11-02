@@ -1,0 +1,22 @@
+# my_tool.py
+# Author: Kelly Lam
+
+class CafeOrders:
+    """A tool that knows about the status of your cafe orders. It knows nothing about chatting."""
+
+    def __init__(self, orders):
+        """Store the orders this tool can look up."""
+        self.orders = orders
+
+    def find_order_id(self, text):
+        """Return the first known order mentioned in text, or None."""
+        for order_id in self.orders:
+            if order_id in text.upper():
+                return order_id
+        return None
+
+    def find_status(self, order_id):
+        """Return the status of one order, or None if there is no such order."""
+        if order_id in self.orders:
+            return self.orders[order_id]
+        return None
