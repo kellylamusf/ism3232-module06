@@ -1,5 +1,5 @@
 # my_main.py
-#Author: Kelly Lam
+# Author: Kelly Lam
 
 from my_assistant import CafeAssistant
 from my_tool import CafeOrders

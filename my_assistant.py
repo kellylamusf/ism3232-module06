@@ -3,6 +3,7 @@
 
 HANDOFF_WORDS = ["change", "cancel", "swap", "modify"]
 
+
 class CafeAssistant:
     """A mock cafe assistant. Its replies comes from simple rules, not from AI."""
 
@@ -14,14 +15,14 @@ class CafeAssistant:
         self.history = []
 
     def respond(self, user_message):
-        """"Record the user's message, choose a reply, record it, and return it."""
+        """ "Record the user's message, choose a reply, record it, and return it."""
         self.history.append({"role": "user", "content": user_message})
         reply = self.choose_reply(user_message)
         self.history.append({"role": "assistant", "content": reply})
         return reply
 
     def choose_reply(self, user_message):
-        """"Choose a reply with keyword rules. This is the mock part."""
+        """ "Choose a reply with keyword rules. This is the mock part."""
         text = user_message.lower()
         if self.needs_human(text):
             return "I can't change an order. I'm passing you to a barista."
