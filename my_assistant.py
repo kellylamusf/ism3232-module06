@@ -1,23 +1,27 @@
-# my_assitant.py
+# my_assistant.py
 # Author: Kelly Lam
 
 HANDOFF_WORDS = ["change", "cancel", "swap", "modify"]
+MAX_STEPS = 3
 
 
 class CafeAssistant:
-    """A mock cafe assistant. Its replies comes from simple rules, not from AI."""
+    """A mock cafe assistant. It replies comes from simple rules, not from AI."""
 
-    def __init__(self, name, instructions, order_tool):
-        """Set up on assitant with its own name, instructions, tool, and history."""
+    def __init__(self, name, instructions, toolbox, model):
         self.name = name
         self.instructions = instructions
-        self.order_tool = order_tool
+        self.toolbox = toolbox
+        self.model = model
         self.history = []
 
     def respond(self, user_message):
-        """ "Record the user's message, choose a reply, record it, and return it."""
+        """Record the message, choose a reply, record it, and return it."""
         self.history.append({"role": "user", "content": user_message})
-        reply = self.choose_reply(user_message)
+        if self.needs_human(user_message.lower()):
+            reply = "I can't change an order. I'm passing you to a barista."
+        else:
+            reply = self.ask_model()
         self.history.append({"role": "assistant", "content": reply})
         return reply
 
@@ -48,3 +52,27 @@ class CafeAssistant:
         if status is None:
             return f"I don't know about order {order_number}. Please check your receipt number."
         return f"Order {order_number} is {status}."
+
+    def ask_model(self):
+        """Ask the model in a loop with a limit. Run each tool request through the toolbox."""
+        said = " ".join(m["content"] for m in self.history if m["role"] == "user")
+        for _ in range(MAX_STEPS):
+            decision = self.model.decide(
+                self.instructions, self.history, self.toolbox.tools()
+            )
+            if decision is None:
+                return "Sorry, I can't answer that right now. Please ask a barista."
+            if "tool" not in decision:
+                return decision["text"]
+            name = decision["tool"]
+            arguments = decision["arguments"]
+            result = self.toolbox.run(name, arguments, said)
+            self.history.append(
+                {
+                    "role": "tool",
+                    "tool_name": name,
+                    "arguments": arguments,
+                    "content": result,
+                }
+            )
+        return "Sorry, I couldn't finish that. Please ask a barista."

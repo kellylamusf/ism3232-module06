@@ -24,4 +24,7 @@
 - tests/test_my_assistant.py
 - my_tool.py
 ## AI Use Statement 
-- I used Claude to help me plan and identify my coding errors. 
+- I used Claude to help me plan and debug my errors in my_main.py, my_tool.py, and my_assistant.py and to identify why my pytests were failing. 
+
+## Week 12: Upgrading my Green and Bean Cafe Assistant Chuoi
+- When asking to see if an order is ready, Chuoi will use the look_up_order tool, and the toolbox will pass it through and reply with order 2 is being made, etc. When trying to cancel an order Chuoi will pass you onto a barista. When you ask, "Can I get a latte" it will ask for your name to place the order. 
